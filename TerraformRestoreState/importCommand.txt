@@ -1,0 +1,1 @@
+terraform import azurerm_resource_group.rg /subscriptions/066f3621-6fd8-458f-8b56-943d69a7b36a/resourceGroups/ATT_GROUPTestState

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: springbootdockerapp-service
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "apps-subnet"
+  labels:
+    app: springbootdockerapp-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: springbootdockerapp
+  sessionAffinity: None

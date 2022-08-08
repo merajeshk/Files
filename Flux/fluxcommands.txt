@@ -1,0 +1,70 @@
+Create an Azure Container Registry
+-----------------------------------
+az group create --name FluxRG --location southindia
+az acr create --resource-group FluxRG --name lakshmanadockeracr --sku Basic
+
+Create an Azure Kubernetes Service cluster
+------------------------------------------
+az aks create -g FluxRG -n MyAKS --location southindia  --attach-acr lakshmanadockeracr --generate-ssh-keys
+az aks create -g FluxRG -n MyAKS --location southindia  --attach-acr lakshmanadockeracr --generate-ssh-keys --node-vm-size standard_d11
+
+Connect to your AKS cluster
+----------------------------
+kubectl (not installed)
+az aks install-cli
+az aks get-credentials --resource-group FluxRG --name MyAKS
+kubectl (installed)
+
+==============================FLUX =========================
+
+choco install flux
+choco install fluxctl
+
+kubectl config current-context
+
+kubectl create ns flux
+
+$GHUSER = "yeddulakshmana"
+
+fluxctl install `
+--git-user=${GHUSER} `
+--git-email=${GHUSER}@users.noreply.github.com `
+--git-url=git@github.com:${GHUSER}/DockerDeployment `
+--git-path=kubernetes/configmaps,kubernetes/secrets,kubernetes/deployments,kubernetes/services `
+--git-branch=master `
+--namespace=flux | kubectl apply -f -
+
+kubectl -n flux get pods
+
+kubectl  -n flux logs flux-5d866c7654-wfdhl
+
+kubectl -n flux rollout status deployment/flux
+
+$env:FLUX_FORWARD_NAMESPACE= "flux"
+fluxctl list-workloads
+fluxctl identity
+
+
+fluxctl sync
+
+docker pull ly00530330/springbootdockerclass:v1
+
+
+fluxctl install --git-url 'git@github.com:yeddulakshmana/DockerDeployment' | kubectl -f -
+
+fluxctl policy -w default:deployment/example-deploy --tag='example-app=v*'
+
+===============================================
+
+
+docker build -f ../Dockerfile -t springbootdockerclass .
+PS D:\SpringBootNareshIT\RaghuSirFUllCode\DOCKERTEST\SpringBootDocker\target> docker tag springbootdockerclass ly00530330/springbootdockerclass:v2
+PS D:\SpringBootNareshIT\RaghuSirFUllCode\DOCKERTEST\SpringBootDocker\target> docker push ly00530330/springbootdockerclass:v2
+
+
+
+
+===================================Rollback====================================================
+https://learnk8s.io/kubernetes-rollbacks
+
+kubectl rollout undo deployment/app --to-revision=2

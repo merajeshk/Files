@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springbootdocker-deployment
+  labels:
+    app: springbootdockerapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: springbootdockerapp
+  template:
+    metadata:
+      labels:
+        app: springbootdockerapp
+    spec:
+      containers:
+      - name: springbootdocker
+        image: ly00530330/springbootdockerclass:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080

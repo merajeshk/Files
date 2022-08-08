@@ -1,0 +1,132 @@
+Create an Azure container Registry (ACR)
+Create an Azure Service principal
+Create an Azure Kubernetes cluster (AKS)
+Import image into Azure Container Registry
+Publish the application
+Upgrade AKS cluster
+Scale the AKS cluster nodes
+Pods and scaling them
+Access the Kubernetes dashboard
+
+================================================== ACR ==================================================
+
+
+Terraform apply -- ACR creation
+
+docker login
+az acr login --name myacrrepokube
+
+
+#Tag image 
+docker tag springbootdocker:v1 myacrrepokube.azurecr.io/springbootdocker:v1
+
+#Push Image
+docker push myacrrepokube.azurecr.io/springbootdocker:v1
+
+#service 
+PS# az ad sp create-for-rbac --skip-assignment
+================================================== AKS ==================================================
+Terraform apply -- AKS creation
+
+Configure kubectl
+az aks get-credentials --resource-group $(terraform output -raw resource_group_name) --name $(terraform output -raw kubernetes_cluster_name)
+====> Merged "akscluster-aks" as current context in /home/lakshmana/.kube/config
+
+
+
+az aks get-credentials --resource-group akscluster-rg --name akscluster-aks
+
+
+az aks browse --resource-group $(terraform output -raw resource_group_name) --name $(terraform output -raw kubernetes_cluster_name)
+
+================================================ AKS Deployment =========================================================
+
+
+Single Deployment:
+kubectl run podname --image=acrrepo/image:tag --port=80  ==> Single POD deployment
+kubectl run podtest1 --image=myacrrepokube.azurecr.io/springbootdocker:v1 --port=80  ==> Single POD deployment
+kubectl run podtest2 --image=ly00530330/springbootdockerclass:v1 --port=80  ==> Single POD deployment
+kubectl run podtest3 --image=myacrrepokube/springbootdocker:v1 --port=80  ==> Single POD deployment
+
+kubectl get pods
+kubectl describe pods
+kubectl delete pods podname
+
+
+Multiple Deployment:
+PODS:
+ kubectl apply -f .\springbootdocker_deployment.yaml
+	kubectl describe deployments springbootdocker-deployment
+
+LOAD BALANCER:
+kubectl get pods
+
+ kubectl apply -f .\springbootdockerLB_service.yaml
+ kubectl describe services springbootdockerapp-service
+ 
+ 
+EDIT DEPLOYMENT:
+ kubectl get deployments
+  kubectl edit deployments springbootdocker-deployment
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+kubectl get - list resources
+kubectl describe - show detailed information about a resource
+kubectl logs - print the logs from a container in a pod
+kubectl exec - execute a command on a container in a pod
+
+
+
+az aks command invoke -g <resourceGroup> -n <clusterName> -c "kubectl get pods -n kube-system"
+az aks command invoke -g <resourceGroup> -n <clusterName> -c "kubectl get nodes"
+
+
+
+
+export KUBECONFIG=kubeconfig.yaml
+kubectl get nodes
+kubectl cluster-info 
+
+
+
+kubectl run podname --image=acrrepo/image:tag --port=80  ==> Single POD deployment
+kubectl run podtest1 --image=myacrrepokube.azurecr.io/springbootdocker:v1 --port=80  ==> Single POD deployment
+kubectl run podtest2 --image=ly00530330/springbootdockerclass:v1 --port=80  ==> Single POD deployment
+kubectl run podtest3 --image=myacrrepokube/springbootdocker:v1 --port=80  ==> Single POD deployment
+docker pull ly00530330/springbootdockerclass:v1
+
+az vm image list --location southindia --output table
+az vm image list-publishers --location southindia --output table
+
+kubectl describe pods
+kubectl delete pods podname
+kubectl get pods
+kubectl apply -f appdeployment.yaml==> Multiple POD deployment 3
+   Concept of desired state
+kubectl get deployments
+
+
+kubectl edit deployment deploymentname ==> Multiple POD deployment 10
+kubectl get pods
+
+
+kubectl apply -f loadbalancerservice.yaml
+kubectl get services
+kubectl get services servicename
+kubectl describe services servicename
+
+kubectl describe pod podtest -n <namespace>
+az aks check-acr --resource-group akscluster-rg --name akscluster-aks --acr myacrrepokube.azurecr.io
+az acr check-health --name myacrrepokube --ignore-errors --yes
+
+az role assignment list --scope /subscriptions/066f3621-6fd8-458f-8b56-943d69a7b36a/resourceGroups/rg-tf-acr/providers/Microsoft.ContainerRegistry/registries/myacrrepokube -o table
+
+
+choco install kubernetes-helm
+helm upgrade -i my_release --version 3.36.0

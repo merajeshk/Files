@@ -1,0 +1,101 @@
+docker build -f ../Dockerfile -t springbootdockershireesha .
+
+
+PS D:\SpringBootNareshIT\RaghuSirFUllCode\DOCKERTEST\SpringBootDocker\target> docker images
+REPOSITORY                      TAG       IMAGE ID       CREATED          SIZE
+devopskalsym/springbootdocker   v1        6d5570a34d1c   31 minutes ago   544MB
+springbootdocker                v1        6d5570a34d1c   31 minutes ago   544MB
+PS D:\SpringBootNareshIT\RaghuSirFUllCode\DOCKERTEST\SpringBootDocker\target> docker rmi devopskalsym/springbootdocker:v1
+Untagged: devopskalsym/springbootdocker:v1
+PS D:\SpringBootNareshIT\RaghuSirFUllCode\DOCKERTEST\SpringBootDocker\target> docker images
+REPOSITORY         TAG       IMAGE ID       CREATED          SIZE
+springbootdocker   v1        6d5570a34d1c   31 minutes ago   544MB
+PS D:\SpringBootNareshIT\RaghuSirFUllCode\DOCKERTEST\SpringBootDocker\target> docker tag springbootdocker:v1 ly00530330/springbootdocker:v1
+PS D:\SpringBootNareshIT\RaghuSirFUllCode\DOCKERTEST\SpringBootDocker\target> docker push ly00530330/springbootdocker:v1
+The push refers to repository [docker.io/ly00530330/springbootdocker]
+e786ee133ed1: Pushed
+33e63e14c803: Pushed
+8292a10d7604: Pushed
+3b2356b88239: Pushed
+a7934564e6b9: Pushed
+1b7cceb6a07c: Pushed
+b274e8788e0c: Pushed
+78658088978a: Pushed
+v1: digest: sha256:ba9e9111a4a606416b07e05704ecdb8ad2b4399a3938191c0706395239cdc5e1 size: 2007
+PS D:\SpringBootNareshIT\RaghuSirFUllCode\DOCKERTEST\SpringBootDocker\target> docker run -p 9090:8080 springbootdocker:v1
+
+
+
+
+
+====================docker on AKS========================
+https://www.youtube.com/watch?v=W7XZSZZhPlc
+
+
+az account show --output table
+
+#Build the docker image
+docker build -t springbootdocker:v1
+
+#Run docker
+ docker run -p 9090:8080 springbootdocker:v1
+
+#create resource group
+az group create --location centralindia --resource-group dockergroup
+
+#Create Container registry
+az acr create --resource-group dockergroup --name dockeracr98 --sku Basic
+
+#Login into Azure Container Registry
+az acr login -n dockeracr98
+
+#Tag image 
+docker tag springbootdocker:v1 dockeracr98.azurecr.io/springbootdocker:v1
+
+#Push Image
+docker push dockeracr98.azurecr.io/springbootdocker:v1
+
+#Create AKS Cluster
+az aks create --resource-group dockergroup --name dockercluster --node-count 1 --generate-ssh-keys --attach-acr dockeracr98 --node-vm-size Standard_DS2_v2
+
+az aks create --resource-group dockergroup --name dockercluster --node-count 2 --generate-ssh-keys --attach-acr dockeracr98 --node-vm-size DS2_v2 --location centralindia --enable-addons http_application_routing
+
+
+az aks create --resource-group dockergroup --name dockercluster --node-count 2 --generate-ssh-keys --attach-acr dockeracr98 --node-vm-size Standard_A1 --location eastus --enable-addons http_application_routing
+az aks create --resource-group dockergroup --name dockercluster --node-count 2 --generate-ssh-keys --attach-acr dockeracr98 --node-vm-size Standard_A1_v2 --location eastus --enable-addons http_application_routing
+az aks create --resource-group dockergroup --name dockercluster --node-count 2 --generate-ssh-keys --attach-acr dockeracr98 --node-vm-size Standard_D64_v3 --location eastus --enable-addons http_application_routing
+az aks create --resource-group dockergroup --name dockercluster --node-count 2 --generate-ssh-keys --attach-acr dockeracr98 --node-vm-size Standard_DS11 --location eastus --enable-addons http_application_routing
+az aks create --resource-group dockergroup --name dockercluster --node-count 2 --generate-ssh-keys --attach-acr dockeracr98 --node-vm-size Standard_GS3 --location eastus --enable-addons http_application_routing
+az aks create --resource-group dockergroup --name dockercluster --node-count 2 --generate-ssh-keys --attach-acr dockeracr98 --node-vm-size standard_d11 --location centralindia --enable-addons http_application_routing
+
+
+--node-vm-size DS2_v2
+
+
+PS C:\Users\LAKSHMAN> az aks create --resource-group dockergroup --name dockercluster --node-count 1 --generate-ssh-keys --attach-acr dockeracr98 --node-vm-size standard_d11
+(ControlPlaneAddOnsNotReady) Pods not in Running status: coredns-69c47794-sxltf,coredns-autoscaler-7d56cd888-kbndv,metrics-server-64b66fbbc8-htmgq,tunnelfront-576675c769-jf6g2,tunnelfront-7bfb749866-4cfrv
+Code: ControlPlaneAddOnsNotReady
+Message: Pods not in Running status: coredns-69c47794-sxltf,coredns-autoscaler-7d56cd888-kbndv,metrics-server-64b66fbbc8-htmgq,tunnelfront-576675c769-jf6g2,tunnelfront-7bfb749866-4cfrv
+
+
+
+
+#Get Credentials
+az aks get-credentials --resource-group dockergroup --name dockercluster
+
+#Create Pods and Service
+kubectl apply -f D:\Azure\springbootdocker-azure.yaml
+
+#Check
+kubectl get service
+kubectl get pods
+
+#Cleanup
+az group delete --resource-group dockergroup
+DOCKERLOGIN/WELCOME
+
+
+
+$ kubectl get nodes --all-namespaces
+
+$ kubectl get event -n kube-system

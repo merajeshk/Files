@@ -1,0 +1,73 @@
+git init
+git add .
+git status
+git commit
+dir /a
+
+
+git remote add origin https://LY00530330@dev.azure.com/LY00530330/ATTCSIAzureMigration/_git/ATTCSIAzureMigration
+git push -u origin --all
+
+Powershell : AZ Module
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
+Connect-AzAccount
+
+
+To deploy to a resource group, use New-AzResourceGroupDeployment:
+New-AzResourceGroupDeployment -ResourceGroupName <resource-group-name> -TemplateFile <path-to-template>
+
+
+To deploy to a subscription, use New-AzSubscriptionDeployment which is an alias of the New-AzDeployment cmdlet:
+New-AzSubscriptionDeployment -Location <location> -TemplateFile <path-to-template>
+
+To deploy to a management group, use New-AzManagementGroupDeployment.
+New-AzManagementGroupDeployment -Location <location> -TemplateFile <path-to-template>
+
+To deploy to a tenant, use New-AzTenantDeployment.
+New-AzTenantDeployment -Location <location> -TemplateFile <path-to-template>
+
+
+New-AzResourceGroupDeployment -Name ExampleDeployment -ResourceGroupName ExampleResourceGroup `
+  -TemplateFile <path-to-template> `
+  -TemplateParameterFile c:\MyTemplates\storage.parameters.json
+  
+  
+Deployment:(PS)
+New-AzResourceGroup -ResourceGroupName LakshmanaRSG -Location southindia
+New-AzResourceGroupDeployment -ResourceGroupName LakshmanaRSG -TemplateFile D:\Azure\ATTCSIAzureMigration\template.json   -TemplateParameterFile D:\Azure\ATTCSIAzureMigration\parameters.json
+  
+New-AzResourceGroupDeployment -ResourceGroupName LakshmanaRSG -TemplateUri https://dev.azure.com/LY00530330/_git/ATTCSIAzureMigration?path=/template.json -TemplateParameterUri https://dev.azure.com/LY00530330/_git/ATTCSIAzureMigration?path=/parameters.json
+
+
+Remove-AzResourceGroup -Name "LakshmanaRSG" -Force
+
+
+
+By chance did you delete the storage resource that was created for you when first launching Cloud Shell?
+
+Please follow those steps:
+
+1.Run "clouddrive unmount"
+2.Restart Cloud Shell via restart icon or exit and relaunch
+3.You should be prompted with the storage creation dialog again.
+
+Here a similar case about you, please refer to it.
+
+
+https://www.youtube.com/watch?v=gO89GtTaFas
+https://www.youtube.com/watch?v=0s2ZqHgieT0
+
+
+https://localhost:44368/
+
+Azure CLI
+
+Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi
+
+Terraform :
+
+https://www.youtube.com/watch?v=yirf1tnmf6A
+https://www.youtube.com/watch?v=3WgI7EJAULo&list=PLFoX_td1iTj8U74ZxVRNkEebG3pb2Gdpb&index=14
+
+
